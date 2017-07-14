@@ -12,7 +12,13 @@ class CheckoutActivity : AppCompatActivity(), CheckoutPresenter.View {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_checkout)
 
-        presenter = CheckoutPresenter(this)
+        val priceRules = HashMap<String, PriceRule>()
+        priceRules.put("A", PriceRule(50f, { items -> if (items % 3 == 0) 20f else 0f }))
+        priceRules.put("B", PriceRule(30f, { items -> if (items % 2 == 0) 15f else 0f }))
+        priceRules.put("C", PriceRule(20f, { 0f }))
+        priceRules.put("D", PriceRule(15f, { 0f }))
+
+        presenter = CheckoutPresenter(this, Checkout(priceRules))
 
         scanButton.setOnClickListener(View.OnClickListener { view ->
             presenter.scan(inputEditText.text.toString())
